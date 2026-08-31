@@ -2,7 +2,7 @@ import logging
 from telegram.ext import Application, CommandHandler
 
 from config import BOT_TOKEN
-from bot.handlers.start import start
+from bot.handlers.register import register_handlers
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -15,9 +15,7 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 def main():
     application = Application.builder().token(BOT_TOKEN).build()
 
-    application.add_handler(
-        CommandHandler("start", start)
-    )
+    register_handlers(application)
 
     application.run_polling()
 
