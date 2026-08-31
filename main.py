@@ -3,6 +3,8 @@ from telegram.ext import Application, CommandHandler
 
 from config import BOT_TOKEN
 from bot.handlers.register import register_handlers
+from database.database import init_db
+
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -10,10 +12,13 @@ logging.basicConfig(
 # set higher logging level for httpx to avoid all GET and POST requests being logged
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
+async def post_init(application: Application):
+    await init_db()
+
 
 
 def main():
-    application = Application.builder().token(BOT_TOKEN).build()
+    application = Application.builder().token(BOT_TOKEN).post_init(post_init).build()
 
     register_handlers(application)
 
