@@ -5,11 +5,15 @@ from bot.handlers.topics import (
     subscribe_to_topic,
     topic_navigation,
 )
+from bot.handlers.subscriptions import subscriptions
 
 
 def register_handlers(application):
     application.add_handler(
         CommandHandler("start", start)
+    )
+    application.add_handler(
+        CommandHandler("subscriptions",subscriptions,)
     )
 
     application.add_handler(

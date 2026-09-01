@@ -51,3 +51,25 @@ async def subscribe_user_to_topic(
         await session.commit()
 
         return True
+
+async def get_user_subscriptions(
+    telegram_id: int,
+) -> list[str]:
+    async with async_session() as session:
+        result = await session.execute(
+            select(Topic.name)
+            .join(
+                Subscription,
+                Subscription.topic_id == Topic.id,
+            )
+            .join(
+                User,
+                User.id == Subscription.user_id,
+            )
+            .where(
+                User.telegram_id == telegram_id
+            )
+            .order_by(Topic.name)
+        )
+
+        return list(result.scalars().all())
