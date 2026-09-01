@@ -1,6 +1,6 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-from bot.constants.topics import LANGUAGES, DIRECTIONS
+from bot.constants.topics import LANGUAGES, DIRECTIONS, TOPICS
 
 
 TOPIC_GROUPS = {
@@ -53,5 +53,23 @@ def get_topics_keyboard(group: str) -> InlineKeyboardMarkup:
             )
         ]
     )
+
+    return InlineKeyboardMarkup(keyboard)
+
+def get_unsubscribe_keyboard(
+    topic_names: list[str],
+) -> InlineKeyboardMarkup:
+    buttons = [
+        InlineKeyboardButton(
+            text=TOPICS.get(topic_name, topic_name),
+            callback_data=f"unsubscribe:{topic_name}",
+        )
+        for topic_name in topic_names
+    ]
+
+    keyboard = [
+        buttons[i:i + 2]
+        for i in range(0, len(buttons), 2)
+    ]
 
     return InlineKeyboardMarkup(keyboard)

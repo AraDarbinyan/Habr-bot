@@ -5,8 +5,11 @@ from bot.handlers.topics import (
     subscribe_to_topic,
     topic_navigation,
 )
-from bot.handlers.subscriptions import subscriptions
-
+from bot.handlers.subscriptions import (
+    subscriptions,
+    unsubscribe,
+    unsubscribe_from_topic,
+)
 
 def register_handlers(application):
     application.add_handler(
@@ -34,5 +37,18 @@ def register_handlers(application):
         CallbackQueryHandler(
             subscribe_to_topic,
             pattern=r"^topic:",
+        )
+    )
+    application.add_handler(
+        CommandHandler(
+        "unsubscribe",
+        unsubscribe,
+        )
+    )
+
+    application.add_handler(
+        CallbackQueryHandler(
+            unsubscribe_from_topic,
+            pattern=r"^unsubscribe:",
         )
     )

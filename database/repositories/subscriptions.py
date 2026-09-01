@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, delete
 
 from database.database import async_session
 from database.models import Subscription, Topic, User
@@ -73,3 +73,40 @@ async def get_user_subscriptions(
         )
 
         return list(result.scalars().all())
+
+
+async def unsubscribe_user_from_topic(
+    telegram_id: int,
+    topic_name: str,
+) -> bool:
+    async with async_session() as session:
+        user_result = await session.execute(
+            select(User).where(
+                User.telegram_id == telegram_id
+            )
+        )
+        user = user_result.scalar_one_or_none()
+
+        if user is None:
+            return False
+
+        topic_result = await session.execute(
+            select(Topic).where(
+                Topic.name == topic_name
+            )
+        )
+        topic = topic_result.scalar_one_or_none()
+
+        if topic is None:
+            return False
+
+        result = await session.execute(
+            delete(Subscription).where(
+                Subscription.user_id == user.id,
+                Subscription.topic_id == topic.id,
+            )
+        )
+
+        await session.commit()
+
+        return result.rowcount > 0
