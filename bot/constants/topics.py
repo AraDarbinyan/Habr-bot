@@ -44,3 +44,8 @@ HABR_URLS = {
     "web": "https://habr.com/ru/hubs/webdev/articles/",
     "gamedev": "https://habr.com/ru/hubs/gamedev/articles/",
 }
+
+TOPICS = {
+    **LANGUAGES,
+    **DIRECTIONS,
+}
