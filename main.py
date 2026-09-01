@@ -4,6 +4,7 @@ from telegram.ext import Application, CommandHandler
 from config import BOT_TOKEN
 from bot.handlers.register import register_handlers
 from database.database import init_db
+from database.repositories.topics import seed_topics
 
 
 logging.basicConfig(
@@ -14,6 +15,7 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 
 async def post_init(application: Application):
     await init_db()
+    await seed_topics()
 
 
 
