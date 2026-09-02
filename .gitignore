@@ -1,4 +1,6 @@
-venv
+venv/
+.venv/
 .env
 __pycache__
+*.pyc
 habr_bot.db
