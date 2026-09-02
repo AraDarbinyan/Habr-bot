@@ -1,6 +1,7 @@
 from telegram.ext import CommandHandler, CallbackQueryHandler
 
 from bot.handlers.start import start
+from bot.handlers.errors import error_handler
 from bot.handlers.topics import (
     subscribe_to_topic,
     topic_navigation,
@@ -52,3 +53,5 @@ def register_handlers(application):
             pattern=r"^unsubscribe:",
         )
     )
+
+    application.add_error_handler(error_handler)

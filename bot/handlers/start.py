@@ -25,3 +25,4 @@ async def start(
             "Выберите категорию интересующих вас тем:",
             reply_markup=get_topic_groups_keyboard(),
         )
+
