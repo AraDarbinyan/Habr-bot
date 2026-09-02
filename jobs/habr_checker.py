@@ -2,6 +2,7 @@ import logging
 
 import aiohttp
 from telegram import Bot
+from telegram.ext import ContextTypes
 
 from database.repositories.topics import get_active_topics
 from services.article_service import process_topic
@@ -39,3 +40,8 @@ async def check_habr_updates(bot: Bot) -> None:
                     "Failed to process topic: %s",
                     topic.name,
                 )
+
+async def habr_checker_job(
+    context: ContextTypes.DEFAULT_TYPE,
+) -> None:
+    await check_habr_updates(context.bot)
