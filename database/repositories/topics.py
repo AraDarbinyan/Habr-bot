@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, update
 
 from bot.constants.topics import HABR_URLS
 from database.database import async_session
@@ -39,3 +39,16 @@ async def get_active_topics() -> list[Topic]:
         )
 
         return list(result.scalars().all())
+
+async def update_last_article_id(
+    topic_id: int,
+    article_id: str,
+) -> None:
+    async with async_session() as session:
+        await session.execute(
+            update(Topic)
+            .where(Topic.id == topic_id)
+            .values(last_article_id=article_id)
+        )
+
+        await session.commit()
