@@ -1,0 +1,7 @@
+python-telegram-bot[job-queue]
+aiohttp
+beautifulsoup4
+lxml
+SQLAlchemy
+aiosqlite
+python-dotenv
