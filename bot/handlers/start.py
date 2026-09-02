@@ -17,12 +17,20 @@ async def start(
             telegram_id=telegram_user.id,
             username=telegram_user.username,
         )
+    if update.message is None:
+        return
 
-    await update.message.reply_text("Привет!")
+    text = (
+        "👋 Добро пожаловать в Habr for you!\n\n"
+        "Я отслеживаю новые статьи на Habr по интересующим вас "
+        "IT-темам и присылаю их прямо сюда.\n\n"
+        "Выберите категорию ниже, а затем одну или несколько тем, "
+        "на которые хотите подписаться.\n\n"
+        "Используйте /help, чтобы посмотреть доступные команды."
+    )
 
-    if update.message is not None:
-        await update.message.reply_text(
-            "Выберите категорию интересующих вас тем:",
-            reply_markup=get_topic_groups_keyboard(),
-        )
+    await update.message.reply_text(
+        text=text,
+        reply_markup=get_topic_groups_keyboard(),
+    )
 
