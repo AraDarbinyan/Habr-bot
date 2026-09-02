@@ -1,4 +1,5 @@
 import logging
+from utils.logger import setup_logging
 from telegram.ext import Application, CommandHandler
 
 from config import BOT_TOKEN, CHECK_INTERVAL
@@ -27,6 +28,8 @@ async def post_init(application: Application):
 
 
 def main():
+    setup_logging()
+
     application = Application.builder().token(BOT_TOKEN).post_init(post_init).build()
 
     register_handlers(application)

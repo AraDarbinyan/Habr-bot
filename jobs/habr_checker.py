@@ -12,11 +12,18 @@ logger = logging.getLogger(__name__)
 
 
 async def check_habr_updates(bot: Bot) -> None:
+    logger.info("Starting Habr update check")
+
     topics = await get_active_topics()
 
     if not topics:
         logger.info("No active topics to check")
         return
+
+    logger.info(
+        "Checking %d active topic(s)",
+        len(topics),
+    )
 
     timeout = aiohttp.ClientTimeout(total=15)
 
@@ -40,6 +47,7 @@ async def check_habr_updates(bot: Bot) -> None:
                     "Failed to process topic: %s",
                     topic.name,
                 )
+    logger.info("Habr update check completed")
 
 async def habr_checker_job(
     context: ContextTypes.DEFAULT_TYPE,
