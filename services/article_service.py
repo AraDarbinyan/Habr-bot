@@ -1,5 +1,7 @@
 import aiohttp
 
+from telegram import Bot
+from services.notification_service import notify_topic_subscribers
 from database.models import Topic
 from database.repositories.topics import update_last_article_id
 from parser.habr_parser import get_latest_article
@@ -33,3 +35,29 @@ async def check_topic_for_new_article(
 
     # Найдена новая статья
     return article
+
+async def process_topic(
+    bot: Bot,
+    topic: Topic,
+    session: aiohttp.ClientSession,
+) -> bool:
+    article = await check_topic_for_new_article(
+        topic=topic,
+        session=session,
+    )
+
+    if article is None:
+        return False
+
+    await notify_topic_subscribers(
+        bot=bot,
+        topic=topic,
+        article=article,
+    )
+
+    await update_last_article_id(
+        topic_id=topic.id,
+        article_id=article.id,
+    )
+
+    return True
