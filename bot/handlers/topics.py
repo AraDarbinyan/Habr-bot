@@ -90,3 +90,15 @@ async def subscribe_to_topic(
         await query.message.reply_text(
             f"ℹ️ Вы уже подписаны на {display_name}"
         )
+
+async def subscribe(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+):
+    if update.message is None:
+        return
+
+    await update.message.reply_text(
+        "Выберите категорию интересующих вас тем:",
+        reply_markup=get_topic_groups_keyboard(),
+    )

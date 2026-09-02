@@ -4,6 +4,7 @@ from bot.handlers.start import start
 from bot.handlers.help import help_command
 from bot.handlers.errors import error_handler
 from bot.handlers.topics import (
+    subscribe,
     subscribe_to_topic,
     topic_navigation,
 )
@@ -17,9 +18,15 @@ def register_handlers(application):
     application.add_handler(
         CommandHandler("start", start)
     )
+
+    application.add_handler(
+    CommandHandler("subscribe", subscribe,)
+    )
+
     application.add_handler(
         CommandHandler("help",help_command,)
     )
+
     application.add_handler(
         CommandHandler("subscriptions",subscriptions,)
     )

@@ -4,6 +4,7 @@ from telegram.ext import Application, CommandHandler
 
 from config import BOT_TOKEN, CHECK_INTERVAL
 from bot.handlers.register import register_handlers
+from bot.commands import set_bot_commands
 from database.database import init_db
 from database.repositories.topics import seed_topics
 from jobs.habr_checker import habr_checker_job
@@ -18,11 +19,12 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 async def post_init(application: Application):
     await init_db()
     await seed_topics()
+    await set_bot_commands(application)
 
     application.job_queue.run_repeating(
         habr_checker_job,
         interval=CHECK_INTERVAL,
-        first=15,
+        first=10,
         name="habr_checker",
     )
 
