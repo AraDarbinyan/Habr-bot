@@ -110,3 +110,20 @@ async def unsubscribe_user_from_topic(
         await session.commit()
 
         return result.rowcount > 0
+
+async def get_topic_subscribers(
+    topic_id: int,
+) -> list[int]:
+    async with async_session() as session:
+        result = await session.execute(
+            select(User.telegram_id)
+            .join(
+                Subscription,
+                Subscription.user_id == User.id,
+            )
+            .where(
+                Subscription.topic_id == topic_id
+            )
+        )
+
+        return list(result.scalars().all())
