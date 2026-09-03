@@ -1,4 +1,6 @@
-from sqlalchemy import BigInteger, ForeignKey, String
+from datetime import datetime
+
+from sqlalchemy import BigInteger, ForeignKey, String, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from database.database import Base
@@ -60,6 +62,12 @@ class Subscription(Base):
     topic_id: Mapped[int] = mapped_column(
         ForeignKey("topics.id", ondelete="CASCADE"),
         primary_key=True,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
     )
 
     user: Mapped["User"] = relationship(
