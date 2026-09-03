@@ -5,3 +5,4 @@ lxml
 SQLAlchemy
 asyncpg
 python-dotenv
+alembic
