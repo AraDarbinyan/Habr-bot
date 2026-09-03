@@ -3,5 +3,5 @@ aiohttp
 beautifulsoup4
 lxml
 SQLAlchemy
-aiosqlite
+asyncpg
 python-dotenv
