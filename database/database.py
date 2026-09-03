@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.orm import DeclarativeBase
 
-from config import DATABASE_URL
+from database.config import DATABASE_URL
 
 class Base(DeclarativeBase):
     pass

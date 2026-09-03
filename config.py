@@ -14,6 +14,5 @@ def get_required_env(name: str) -> str:
     return value
 
 BOT_TOKEN = get_required_env("HABR_BOT_TOKEN")
-DATABASE_URL = get_required_env("DATABASE_URL")
 
 CHECK_INTERVAL = 10 * 60
