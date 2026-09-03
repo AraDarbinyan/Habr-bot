@@ -22,8 +22,3 @@ async_session = async_sessionmaker(
     expire_on_commit=False,
 )
 
-async def init_db():
-    from database import models
-
-    async with engine.begin() as connection:
-        await connection.run_sync(Base.metadata.create_all)
