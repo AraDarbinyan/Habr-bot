@@ -243,6 +243,88 @@ Start the bot:
 python main.py
 ```
 
+## Deployment
+
+The bot is deployed on Railway and runs continuously in a production environment.
+
+The production setup consists of two Railway services:
+
+- **Habr Bot** — the Dockerized Python application
+- **PostgreSQL** — the managed production database
+
+The application uses Railway environment variables to securely configure the Telegram bot token and database connection.
+
+Before every deployment, Alembic migrations are automatically applied:
+
+```bash
+alembic upgrade head
+```
+
+If the migration fails, the new application version is not started.
+
+The bot uses Telegram long polling, so it does not require a public HTTP endpoint or domain.
+
+
+## CI/CD
+
+The project includes an automated CI/CD pipeline using GitHub Actions and Railway.
+
+### Continuous Integration
+
+Every push or pull request to the `main` branch triggers a GitHub Actions workflow.
+
+The CI pipeline:
+
+1. Checks out the repository
+2. Sets up Python 3.12
+3. Starts a temporary PostgreSQL 16 database
+4. Installs project dependencies
+5. Checks Python syntax
+6. Applies all Alembic migrations
+7. Verifies that SQLAlchemy models do not contain unapplied schema changes
+8. Checks that the main application modules can be imported successfully
+
+The workflow must complete successfully before the new version can be deployed.
+
+### Continuous Deployment
+
+Railway is connected directly to the GitHub `main` branch and has **Wait for CI** enabled.
+
+The deployment workflow is:
+
+```text
+Developer
+    |
+    v
+git push to main
+    |
+    v
+GitHub Actions
+    |
+    +---- CI failed ----> Deployment stopped
+    |
+    v
+CI passed
+    |
+    v
+Railway
+    |
+    v
+Build Docker image
+    |
+    v
+Run Alembic migrations
+    |
+    v
+Start application
+    |
+    v
+Production
+```
+
+This allows new versions of the bot to be automatically tested and deployed after every successful push to `main`.
+
+
 ## Future Improvements
 
 - Automated CI/CD deployment
