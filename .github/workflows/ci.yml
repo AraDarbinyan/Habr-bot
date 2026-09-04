@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+
+        env:
+          POSTGRES_DB: habr_bot_test
+          POSTGRES_USER: habr_bot_user
+          POSTGRES_PASSWORD: test_password
+
+        ports:
+          - 5432:5432
+
+        options: >-
+          --health-cmd="pg_isready -U habr_bot_user -d habr_bot_test"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      HABR_BOT_TOKEN: test_token
+      DATABASE_URL: postgresql+asyncpg://habr_bot_user:test_password@localhost:5432/habr_bot_test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check Python syntax
+        run: python -m compileall -q .
+
+      - name: Run database migrations
+        run: alembic upgrade head
+
+      - name: Check for missing migrations
+        run: alembic check
+
+      - name: Check application imports
+        run: |
+          python -c "
+          from bot.handlers.register import register_handlers
+          from jobs.habr_checker import check_habr_updates
+          from services.article_service import process_topic
+          print('Application imports successfully')
+          "
